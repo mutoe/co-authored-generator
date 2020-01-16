@@ -127,7 +127,7 @@
     <button @click="copy">copy git config setter</button>
 
     <pre id="result">!co_authored_commit_by() {
-  usage = 'Something wrong!!!';
+  usage="Something wrong!!!";
   while [ "${#}" -gt 0 ]; do
     case "${1}" in
       -m)
@@ -138,22 +138,22 @@
         shift;
         co_username="${1}";
         case $co_username in
-          <template v-for="author in authors">"{{author.alias}}") co_author_msg="{{author.username}} {{author.email}}" ;;
+          <template v-for="author in authors">"{{author.alias}}") co_author_msg="{{author.username}} &lt;{{author.email}}&gt;" ;;
           </template>
-          *) echo "No such user, you can select them: '{{authors.map(item => item.username).join(',')}}'"; exit 1;;
+          *) echo "No such user, you can select them: {{authors.map(item => item.username).join(', ')}}"; exit 1;;
         esac;
-        co_author="Co-authored-by: "${co_author_msg}"\n";
+        co_author="Co-authored-by: &quot;${co_author_msg}&quot;\n";
         shift;;
       *)
         shift;;
     esac;
   done;
   if [ -z "${co_author}" ]; then
-    echo ${usage};
+    echo "${usage}";
     exit 1;
   fi;
   if [ -z "${message}" ]; then
-    echo ${usage};
+    echo "${usage}";
     exit 1;
   fi;
   co_authored_message="${message}\n${co_author}";
@@ -197,9 +197,10 @@ new Vue({
       document.body.appendChild(input)
       let result = document.querySelector('#result').innerHTML
         .replace(/\n/g, '')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
         .replace(/ +/g, ' ')
-        .replace(/"/g, '\"')
-      result = `git config --global alias.cc "${result}"`
+      result = `git config --global alias.cc '${result}'`
       input.setAttribute('value', result)
       input.select()
       document.execCommand('copy')
@@ -219,4 +220,3 @@ new Vue({
 </script>
 </body>
 </html>
-
