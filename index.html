@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
@@ -8,125 +9,144 @@
   <title>Co-Author Generator</title>
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <style>
-  body {
-    font-size: 13px;
-    font-family: Yahei;
-  }
+    body {
+      font-size: 13px;
+      font-family: Yahei;
+    }
 
-  code {
-    background: #eee;
-    padding: 2px 8px;
-    display: inline-block;
-  }
+    code {
+      background: #eee;
+      padding: 2px 8px;
+      display: inline-block;
+    }
 
-  input, textarea {
-    border: 1px solid #eee;
-  }
+    input,
+    textarea {
+      border: 1px solid #eee;
+    }
 
-  textarea {
-    width: 80%;
-    min-height: 100px;
-  }
+    textarea {
+      width: 80%;
+      min-height: 100px;
+    }
 
-  #app {
-    display: flex;
-  }
+    #app {
+      display: flex;
+    }
 
-  details {
-    background: #eee;
-    padding: 12px;
-  }
+    details {
+      background: #eee;
+      padding: 12px;
+    }
 
-  .left {
-    width: 50%;
-    margin: 20px 0;
-  }
+    .left {
+      width: 50%;
+      margin: 20px 0;
+    }
 
-  .right {
-    width: 50%;
-  }
+    .right {
+      width: 50%;
+    }
 
-  #result {
-    border: 1px solid #ddd;
-    max-height: 200px;
-    overflow: scroll;
-  }
+    #result {
+      border: 1px solid #ddd;
+      max-height: 200px;
+      overflow: scroll;
+    }
   </style>
 </head>
+
 <body>
 
-<h1>
-  Co-Authored-By 生成器
-</h1>
+  <h1>
+    Co-Authored-By 生成器
+  </h1>
 
-<details>
-  <summary>
-    什么是
-    <a href="https://help.github.com/en/github/committing-changes-to-your-project/creating-a-commit-with-multiple-authors">Co-Auhtored-By</a>？
-  </summary>
+  <details>
+    <summary>
+      什么是
+      <a
+        href="https://help.github.com/en/github/committing-changes-to-your-project/creating-a-commit-with-multiple-authors">Co-Auhtored-By</a>？
+    </summary>
 
-  <p>
-    Co-Authored-By 可以在你和小伙伴pair时，把他的头像也加入到commit log中， 做法就是在commit message末尾加入这一行
-  </p>
-
-  <pre>Co-authored-by: name &lt;name@example.com&gt;</pre>
-
-  <p>
-    这个小工具可以帮你管理pair小伙伴, 使用时只需 <code>git cc --co mt -m "happy pair!"</code>
-  </p>
-</details>
-
-<div id="app">
-  <div class="left">
-    <form>
-      <input type="text" v-model="alias" placeholder="alias">
-      <input type="text" v-model="username" placeholder="username">
-      <input type="text" v-model="email" placeholder="email">
-      <button @click="append">添加</button>
-    </form>
-
-    <p>或者导入来自 <code>git config --global alias.cc</code> 已有的片段</p>
-    <textarea type="text" v-model="existAlias"></textarea>
     <p>
-      <button @click="parser">导入</button>
+      Co-Authored-By 可以在你和小伙伴pair时，把他的头像也加入到commit log中， 做法就是在commit message末尾加入这一行
     </p>
 
-    <h2>小伙伴列表</h2>
-    <table>
-      <thead>
-      <tr>
-        <th></th>
-        <th>Alias</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="(author, index) in authors" :key="index">
-        <td>{{index+1}}</td>
-        <td><input type="text" v-model="author.alias"></td>
-        <td><input type="text" v-model="author.username"></td>
-        <td><input type="text" v-model="author.email"></td>
-        <td>
-          <button @click="delete(index)">delete</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <pre>Co-authored-by: name &lt;name@example.com&gt;</pre>
 
-  </div>
-
-  <div class="right">
     <p>
-      使用方法：点击下面的按钮复制代码，粘贴在命令行中
+      这个小工具可以帮你快速的生成这个 commit footer. 并且提供了方便管理这个脚本的方法.
+    </p>
+
+    <h2>食用方法</h2>
+    <p>
+      初次使用时, 在 alias 一栏填入小伙伴名称的缩写,如 "mt", 在username和email中填入对方git仓库的用户名和邮箱, 然后点击添加.
       <br>
-      每次提交代码时用 git cc 代替 git commit <code>git cc --co &lt;alias&gt; -m &lt;message&gt;</code>,
+      添加好小伙伴后, 点击右侧的copy, 然后粘贴在命令行中. OK, 所有的准备工作都做好啦.
+      <br>
+      接下来在你需要commit时, 使用 <code>git cc --co mt -m "your commit message"</code>, 然后提交代码,
+      就可以在仓库中看到你和小伙伴的头像一起出现在同一个commit中啦!
     </p>
 
-    <button @click="copy">copy git config setter</button>
+    <p>
+      如果需要修改小伙伴们, 先在命令行中执行 <code>git config --global alias.cc</code>, 将打印出的内容复制下来, 然后粘贴在下方文本区中, 点击“导入”, 就可以看到小伙伴们被解析出来啦.
+      <br>
+      你可以直接在表格中修改小伙伴的信息, 借助Vue的方便, 最终的脚本会实时的被更新在右侧, 修改完毕后点击右侧的copy按钮, 粘贴回命令行即可.
+    </p>
+  </details>
 
-    <pre id="result">!co_authored_commit_by() {
+  <div id="app">
+    <div class="left">
+      <form>
+        <input type="text" v-model="alias" placeholder="alias">
+        <input type="text" v-model="username" placeholder="username">
+        <input type="text" v-model="email" placeholder="email">
+        <button @click="append">添加</button>
+      </form>
+
+      <p>或者导入来自 <code>git config --global alias.cc</code> 已有的片段</p>
+      <textarea type="text" v-model="existAlias"></textarea>
+      <p>
+        <button @click="parser">导入</button>
+      </p>
+
+      <h2>小伙伴列表</h2>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Alias</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(author, index) in authors" :key="index">
+            <td>{{index+1}}</td>
+            <td><input type="text" v-model="author.alias"></td>
+            <td><input type="text" v-model="author.username"></td>
+            <td><input type="text" v-model="author.email"></td>
+            <td>
+              <button @click="delete(index)">delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="right">
+      <p>
+        使用方法：点击下面的按钮复制代码，粘贴在命令行中
+        <br>
+        每次提交代码时用 git cc 代替 git commit <code>git cc --co &lt;alias&gt; -m &lt;message&gt;</code>,
+      </p>
+
+      <button @click="copy">copy git config setter</button>
+
+      <pre id="result">!co_authored_commit_by() {
   usage="Something wrong!!!";
   while [ "${#}" -gt 0 ]; do
     case "${1}" in
@@ -162,61 +182,62 @@
 };
 co_authored_commit_by
   </pre>
+    </div>
   </div>
-</div>
 
-<script>
-new Vue({
-  el: '#app',
-  data() {
-    return {
-      alias: '',
-      username: '',
-      email: '',
-      authors: [],
-      existAlias: '',
-    }
-  },
-  methods: {
-    append(e) {
-      e.preventDefault()
-      this.authors.push({
-        alias: this.alias,
-        username: this.username,
-        email: this.email,
-      })
-      this.alias = ''
-      this.username = ''
-      this.email = ''
-    },
-    delete(index) {
-      this.authors.splice(index, 1)
-    },
-    copy() {
-      const input = document.createElement('input')
-      document.body.appendChild(input)
-      let result = document.querySelector('#result').innerHTML
-        .replace(/\n/g, '')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/ +/g, ' ')
-      result = `git config --global alias.cc $'${result}'`
-      input.setAttribute('value', result)
-      input.select()
-      document.execCommand('copy')
-      document.body.removeChild(input)
-    },
-    parser() {
-      const matches = this.existAlias.matchAll(/"(\S+)"\) co_author_msg="(\S+) <(\S+)>"/g)
-      this.authors.push(...[ ...matches ].map(item => ({
-        alias: item[1],
-        username: item[2],
-        email: item[3],
-      })))
-      this.existAlias = ''
-    },
-  },
-})
-</script>
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          alias: '',
+          username: '',
+          email: '',
+          authors: [],
+          existAlias: '',
+        }
+      },
+      methods: {
+        append(e) {
+          e.preventDefault()
+          this.authors.push({
+            alias: this.alias,
+            username: this.username,
+            email: this.email,
+          })
+          this.alias = ''
+          this.username = ''
+          this.email = ''
+        },
+        delete(index) {
+          this.authors.splice(index, 1)
+        },
+        copy() {
+          const input = document.createElement('input')
+          document.body.appendChild(input)
+          let result = document.querySelector('#result').innerHTML
+            .replace(/\n/g, '')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/ +/g, ' ')
+          result = `git config --global alias.cc $'${result}'`
+          input.setAttribute('value', result)
+          input.select()
+          document.execCommand('copy')
+          document.body.removeChild(input)
+        },
+        parser() {
+          const matches = this.existAlias.matchAll(/"(\S+)"\) co_author_msg="(\S+) <(\S+)>"/g)
+          this.authors.push(...[...matches].map(item => ({
+            alias: item[1],
+            username: item[2],
+            email: item[3],
+          })))
+          this.existAlias = ''
+        },
+      },
+    })
+  </script>
 </body>
+
 </html>
