@@ -142,7 +142,7 @@
           </template>
           *) echo "No such user, you can select them: {{authors.map(item => item.username).join(', ')}}"; exit 1;;
         esac;
-        co_author="Co-authored-by: &quot;${co_author_msg}&quot;\n";
+        co_author="Co-authored-by: ${co_author_msg}\n";
         shift;;
       *)
         shift;;
@@ -156,7 +156,7 @@
     echo "${usage}";
     exit 1;
   fi;
-  co_authored_message="${message}\n${co_author}";
+  co_authored_message="${message}\n\n${co_author}";
   echo "==== 🎉: Great you did pair today, 🐸 +1s ====\n";
   git commit -m "${co_authored_message}";
 };
@@ -200,7 +200,7 @@ new Vue({
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/ +/g, ' ')
-      result = `git config --global alias.cc '${result}'`
+      result = `git config --global alias.cc $'${result}'`
       input.setAttribute('value', result)
       input.select()
       document.execCommand('copy')
