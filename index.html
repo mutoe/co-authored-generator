@@ -129,7 +129,7 @@
             <td><input type="text" v-model="author.username"></td>
             <td><input type="text" v-model="author.email"></td>
             <td>
-              <button @click="delete(index)">delete</button>
+              <button @click="onDelete(index)">delete</button>
             </td>
           </tr>
         </tbody>
@@ -209,7 +209,7 @@ co_authored_commit_by
           this.username = ''
           this.email = ''
         },
-        delete(index) {
+        onDelete(index) {
           this.authors.splice(index, 1)
         },
         copy() {
